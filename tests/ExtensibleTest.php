@@ -6,6 +6,13 @@ use PHPUnit\Framework\TestCase;
 
 class ExtensibleTest extends TestCase
 {
+    public function tearDown()
+    {
+        if (A::hasExtension('getX')) {
+            A::unextend('getX');
+        }
+    }
+
     public function testExtension()
     {
         A::extend('getX', function (A $a) {
