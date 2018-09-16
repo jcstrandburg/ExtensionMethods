@@ -9,17 +9,33 @@ This library supports C# and kotlin style extension methods for any class that u
 ## Usage
 
 ```php
-class SomeClass
+class Person
 {
   use trait Extensible;
+
+  public function __construct(string $firstname, string $lastname) {
+    $this->firstname = $firstname;
+    $this->lastname = $lastname;
+  }
+
+  public function getFirstname() {
+    return $this->firstname;
+  }
+
+  public function getLastname() {
+    return $this->lastname;
+  }
+
+  private $firstname;
+  private $lastname;
 }
 
-SomeClass::extend('bark', function (SomeClass $x) {
-  echo 'Bark!';
+Person::extend('getFullname', function (Person $x) {
+  return $x->getFirstname() . ' ' . $x->getLastname();
 });
 
-$s = new SomeClass();
-$s->bark();
+$bob = new Person('Bob', 'Roberts');
+$bob->getFullname() == 'Bob Roberts';
 ```
 
 ## Version History
