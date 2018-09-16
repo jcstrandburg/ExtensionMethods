@@ -9,6 +9,11 @@
             "Jcstrandburg\\ExtensionMethods\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "license": "MIT",
     "authors": [
         {

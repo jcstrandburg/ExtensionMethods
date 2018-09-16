@@ -40,6 +40,11 @@ $bob->getFullname() == 'Bob Roberts';
 
 ## Version History
 
+### Unreleased
+
+#### Changes
+* Reworked internal implementation to fix several issues with inheritance. It is now possible to register extension methods for classes extending a base class with the `Extensible` trait even if the extending class itself doesn't have the `Extensible` trait.
+
 ### 1.0
 
 #### Added

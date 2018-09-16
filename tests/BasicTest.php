@@ -4,7 +4,7 @@ namespace Tests;
 use Jcstrandburg\ExtensionMethods\Extensible;
 use PHPUnit\Framework\TestCase;
 
-class ExtensibleTest extends TestCase
+class BasicTest extends TestCase
 {
     public function tearDown()
     {
@@ -28,31 +28,10 @@ class ExtensibleTest extends TestCase
         $a->getX();
     }
 
-    public function testExtensionViaInheritance()
-    {
-        A::extend('getX', function (A $a) {
-            return $a->x;
-        });
-
-        $b = new B(42, 63);
-        $this->assertEquals(42, $b->getX());
-
-        A::unextend('getX');
-        $this->expectException(\BadMethodCallException::class);
-
-        $b->getX();
-    }
-
     public function testCannotReplaceMethodViaExtension()
     {
         $this->expectException(\RuntimeException::class);
         A::extend('getY', function (A $a) {});
-    }
-
-    public function testCannotReplaceParentMethodViaExtension()
-    {
-        $this->expectException(\RuntimeException::class);
-        B::extend('getY', function (A $a) {});
     }
 
     public function testCannotDoubleRegisterExtensions()
@@ -81,8 +60,4 @@ class A
 
     public $x;
     private $y;
-}
-
-class B extends A
-{
 }
