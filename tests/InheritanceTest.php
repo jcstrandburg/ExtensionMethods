@@ -1,53 +1,79 @@
 <?php
 namespace Tests;
 
+use Jcstrandburg\ExtensionMethods\ExtensionManager;
 use PHPUnit\Framework\TestCase;
 
 class InheritanceTest extends TestCase
 {
     public function tearDown()
     {
-        if (ChildTestClass::hasExtension('doX')) {
-            ChildTestClass::unextend('doX');
-        }
-
-        if (BaseTestClass::hasExtension('doX')) {
-            BaseTestClass::unextend('doX');
-        }
+        ExtensionManager::unregisterAllExtensions();
     }
 
-    public function testChildClass()
+    /**
+     *  @dataProvider   classProvider
+     */
+    public function testExtendingChildClassDoesNotExtendBaseClass($class)
     {
-        ChildTestClass::extend('doX', function () {return true;});
+        $r = rand();
+        $class::extend('doX', function () use ($r) {return $r;});
 
-        $c = new ChildTestClass();
-        $this->assertTrue($c->doX());
+        $c = new $class();
+        $this->assertEquals($r, $c->doX());
 
         $b = new BaseTestClass();
         $this->expectException(\BadMethodCallException::class);
         $b->doX();
     }
 
-    public function testBaseClass()
+    /**
+     *  @dataProvider   classProvider
+     */
+    public function testBaseClass($class)
     {
-        BaseTestClass::extend('doX', function () {return true;});
+        $r = rand();
+        BaseTestClass::extend('doX', function () use ($r) {return $r;});
 
-        $c = new ChildTestClass();
-        $this->assertTrue($c->doX());
+        $c = new $class();
+        $this->assertEquals($r, $c->doX());
 
-        $b = new BaseTestClass();
-        $this->assertTrue($b->doX());
+        $base = new BaseTestClass();
+        $this->assertEquals($r, $base->doX());
     }
 
-    public function testExtendBothClasses()
+    /**
+     *  @dataProvider   classProvider
+     */
+    public function testExtendBaseAndChildClass($class)
     {
-        BaseTestClass::extend('doX', function () {return 17;});
-        ChildTestClass::extend('doX', function () {return 42;});
+        $r = rand();
+        $s = rand();
 
-        $c = new ChildTestClass();
-        $this->assertEquals(42, $c->doX());
+        BaseTestClass::extend('doX', function () use ($r) {return $r;});
+        $class::extend('doX', function () use ($s) {return $s;});
+
+        $c = new $class();
+        $this->assertEquals($s, $c->doX());
 
         $b = new BaseTestClass();
-        $this->assertEquals(17, $b->doX());
+        $this->assertEquals($r, $b->doX());
+    }
+
+    public function testExtendingChildDoesNotExtendOtherChildClasss()
+    {
+        ChildTestClassWithTrait::extend('doX', function () {return 0;});
+        ChildTestClassWithoutTrait::extend('doY', function () {return 0;});
+
+        $this->assertFalse(ChildTestClassWithTrait::hasExtension('doY'));
+        $this->assertFalse(ChildTestClassWithoutTrait::hasExtension('doX'));
+    }
+
+    public function classProvider()
+    {
+        return [
+            [ChildTestClassWithoutTrait::class],
+            [ChildTestClassWithTrait::class],
+        ];
     }
 }

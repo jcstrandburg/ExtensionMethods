@@ -3,7 +3,7 @@ namespace Tests;
 
 use Jcstrandburg\ExtensionMethods\Extensible;
 
-class ChildTestClass extends BaseTestClass
+class ChildTestClassWithTrait extends BaseTestClass
 {
     use Extensible;
 }

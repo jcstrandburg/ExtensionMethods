@@ -2,15 +2,14 @@
 namespace Tests;
 
 use Jcstrandburg\ExtensionMethods\Extensible;
+use Jcstrandburg\ExtensionMethods\ExtensionManager;
 use PHPUnit\Framework\TestCase;
 
 class BasicTest extends TestCase
 {
     public function tearDown()
     {
-        if (A::hasExtension('getX')) {
-            A::unextend('getX');
-        }
+        ExtensionManager::unregisterAllExtensions();
     }
 
     public function testExtension()

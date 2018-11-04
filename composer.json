@@ -21,7 +21,9 @@
             "email": "justin.strandburg@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": "^7.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^7.3"
     }
